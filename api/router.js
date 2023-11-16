@@ -1,5 +1,6 @@
 const express = require('express');
 const helpers = require('./model');
+const { validateAnimal, validateSpeciesId } = require('./middleware');
 
 const router = express.Router();
 
@@ -19,7 +20,7 @@ router.get('/animals', (req, res, next) => {
     .catch(next);
 });
 
-router.post('/animals', (req, res, next) => { // it would be nice to have animal validation midd
+router.post('/animals', validateAnimal, (req, res, next) => {
   helpers.createAnimal(req.body)
     .then(animal => {
       res.status(201).json(animal);
@@ -27,13 +28,14 @@ router.post('/animals', (req, res, next) => { // it would be nice to have animal
     .catch(next);
 });
 
-router.delete('/species/:species_id', (req, res, next) => { // it would be nice to have species_id validation midd
+
+router.delete('/species/:species_id', validateSpeciesId, (req, res, next) => {
   helpers.deleteSpecies(req.params.species_id)
     .then(count => {
       if (count > 0) {
         res.status(204).end();
       } else {
-        res.status(404).json({ message: 'Record not found' });
+        res.status(404).json({ message: 'Species not found' });
       }
     })
     .catch(next);

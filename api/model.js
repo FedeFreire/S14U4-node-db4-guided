@@ -12,6 +12,7 @@ function getAnimals() { // INCLUDING SPECIES NAME
 
 async function createAnimal(animal) {
   const [animal_id] = await db('animals').insert(animal);
+  
   return getAnimals().where({ animal_id }).first();
 }
 
