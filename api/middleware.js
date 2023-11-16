@@ -1,10 +1,20 @@
 const db = require('../data/db-config.js')
 
 function validateAnimal(req, res, next) {
-    const { species_id, animal_name } = req.body;
-    if (!species_id || typeof species_id !== 'number' || !animal_name || typeof animal_name !== 'string') {
-      return res.status(400).json({ message: "Please provide a valid species_id and animal_name for the animal" });
+    const { species_id, species_name, animal_name } = req.body;
+  
+    if ((!species_id && !species_name) || (species_id && species_name) || typeof animal_name !== 'string') {
+      return res.status(400).json({ message: "Please provide either a species_id or a species_name, and an animal_name for the animal" });
     }
+  
+    if (species_id && typeof species_id !== 'number') {
+      return res.status(400).json({ message: "Invalid species_id" });
+    }
+  
+    if (species_name && typeof species_name !== 'string') {
+      return res.status(400).json({ message: "Invalid species_name" });
+    }
+  
     next();
   }
   
